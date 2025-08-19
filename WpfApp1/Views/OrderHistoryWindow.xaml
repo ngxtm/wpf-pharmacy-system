@@ -1,0 +1,346 @@
+<Window x:Class="WpfApp1.Views.OrderHistoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Lịch sử đơn hàng" Height="800" Width="1000"
+        WindowStartupLocation="CenterScreen"
+        Background="#F8F9FA">
+    
+    <Window.Resources>
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="BorderBrush" Value="#E9ECEF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#000000" Direction="270" ShadowDepth="2" Opacity="0.1" BlurRadius="8"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#007BFF"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="6" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#0056B3"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#004085"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background" Value="#6C757D"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#545B62"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#3D4142"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Style="{StaticResource CardStyle}" Margin="0,0,0,20" Padding="25">
+            <StackPanel>
+                <TextBlock Text="📋 Lịch sử đơn hàng" 
+                          FontSize="28"
+                          FontWeight="Bold" 
+                          Foreground="#212529"
+                          Margin="0,0,0,10"/>
+                <TextBlock x:Name="WelcomeText" 
+                          FontSize="16" 
+                          Foreground="#6C757D"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,20" Padding="20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="🔍 Tìm kiếm:" 
+                              FontWeight="SemiBold" 
+                              VerticalAlignment="Center" 
+                              Margin="0,0,10,0"/>
+                    <TextBox x:Name="SearchTextBox" 
+                            Width="250" 
+                            Height="35"
+                            Padding="10,8"
+                            FontSize="14"
+                            BorderBrush="#CED4DA"
+                            BorderThickness="1"
+                            TextChanged="SearchTextBox_TextChanged"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <TextBlock x:Name="TotalItemsText" 
+                              Text="Tổng: 0 sản phẩm" 
+                              FontWeight="SemiBold" 
+                              Foreground="#28A745"
+                              VerticalAlignment="Center"
+                              Margin="0,0,20,0"/>
+                    <TextBlock x:Name="TotalSpentText" 
+                              Text="Tổng chi tiêu: 0 đ" 
+                              FontWeight="SemiBold" 
+                              Foreground="#DC3545"
+                              VerticalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="2" Style="{StaticResource CardStyle}" Padding="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <Border Grid.Row="0" 
+                       Background="#F8F9FA" 
+                       BorderBrush="#DEE2E6" 
+                       BorderThickness="0,0,0,1"
+                       CornerRadius="8,8,0,0">
+                    <Grid Margin="20,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" 
+                                  Text="Tên sản phẩm" 
+                                  FontWeight="Bold" 
+                                  FontSize="14"
+                                  Foreground="#495057"/>
+                        <TextBlock Grid.Column="1" 
+                                  Text="Số lượng" 
+                                  FontWeight="Bold" 
+                                  FontSize="14"
+                                  Foreground="#495057"
+                                  HorizontalAlignment="Center"/>
+                        <TextBlock Grid.Column="2" 
+                                  Text="Tổng tiền" 
+                                  FontWeight="Bold" 
+                                  FontSize="14"
+                                  Foreground="#495057"
+                                  HorizontalAlignment="Right"/>
+                        <TextBlock Grid.Column="3" 
+                                  Text="Thao tác" 
+                                  FontWeight="Bold" 
+                                  FontSize="14"
+                                  Foreground="#495057"
+                                  HorizontalAlignment="Center"
+                                  Margin="20,0,0,0"/>
+                    </Grid>
+                </Border>
+                
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="0">
+                    <ItemsControl x:Name="OrdersItemsControl">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="#E9ECEF" 
+                                       BorderThickness="0,0,0,1" 
+                                       Background="White">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#F8F9FA"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    
+                                    <Grid Margin="20,15">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="3*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="1.5*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="{Binding ProductName}" 
+                                                      FontWeight="SemiBold" 
+                                                      FontSize="15"
+                                                      Foreground="#212529"/>
+                                            <TextBlock Text="💊 Thuốc" 
+                                                      FontSize="12" 
+                                                      Foreground="#6C757D"
+                                                      Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                        
+                                        <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                                            <TextBlock Text="{Binding TotalQuantity}" 
+                                                      FontWeight="SemiBold"
+                                                      FontSize="16"
+                                                      Foreground="#28A745"
+                                                      HorizontalAlignment="Center"/>
+                                            <TextBlock Text="sản phẩm" 
+                                                      FontSize="12" 
+                                                      Foreground="#6C757D"
+                                                      HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                        
+                                        <StackPanel Grid.Column="2" HorizontalAlignment="Right">
+                                            <TextBlock Text="{Binding TotalSpent, StringFormat={}{0:N0} đ}" 
+                                                      FontWeight="Bold"
+                                                      FontSize="16"
+                                                      Foreground="#DC3545"
+                                                      HorizontalAlignment="Right"/>
+                                            <TextBlock Text="VNĐ" 
+                                                      FontSize="12" 
+                                                      Foreground="#6C757D"
+                                                      HorizontalAlignment="Right"/>
+                                        </StackPanel>
+                                        
+                                        <Button Grid.Column="3" 
+                                               Content="📊 Chi tiết"
+                                               Background="#17A2B8"
+                                               Margin="20,0,0,0"
+                                               Click="ViewDetailsButton_Click"
+                                               Tag="{Binding}">
+                                            <Button.Style>
+                                                <Style TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+                                                    <Setter Property="Background" Value="#17A2B8"/>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="#138496"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <Border x:Name="EmptyStateBorder" 
+               Grid.Row="2" 
+               Style="{StaticResource CardStyle}" 
+               Visibility="Collapsed">
+            <StackPanel HorizontalAlignment="Center" 
+                       VerticalAlignment="Center" 
+                       Margin="50">
+                <TextBlock Text="📦" 
+                          FontSize="64" 
+                          HorizontalAlignment="Center" 
+                          Margin="0,0,0,20"/>
+                <TextBlock Text="Chưa có đơn hàng nào" 
+                          FontSize="20" 
+                          FontWeight="SemiBold" 
+                          Foreground="#6C757D"
+                          HorizontalAlignment="Center"
+                          Margin="0,0,0,10"/>
+                <TextBlock Text="Hãy bắt đầu mua sắm để xem lịch sử đơn hàng của bạn!" 
+                          FontSize="14" 
+                          Foreground="#ADB5BD"
+                          HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="3" Style="{StaticResource CardStyle}" Margin="0,20,0,0" Padding="20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                    <TextBlock Text="📊" FontSize="24" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="TotalOrdersText" 
+                              Text="0" 
+                              FontSize="24" 
+                              FontWeight="Bold" 
+                              Foreground="#007BFF"
+                              HorizontalAlignment="Center"/>
+                    <TextBlock Text="Tổng đơn hàng" 
+                              FontSize="12" 
+                              Foreground="#6C757D"
+                              HorizontalAlignment="Center"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                    <TextBlock Text="💊" FontSize="24" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="TotalProductsText" 
+                              Text="0" 
+                              FontSize="24" 
+                              FontWeight="Bold" 
+                              Foreground="#28A745"
+                              HorizontalAlignment="Center"/>
+                    <TextBlock Text="Loại sản phẩm" 
+                              FontSize="12" 
+                              Foreground="#6C757D"
+                              HorizontalAlignment="Center"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="2" HorizontalAlignment="Center">
+                    <TextBlock Text="💰" FontSize="24" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="GrandTotalText" 
+                              Text="0 đ" 
+                              FontSize="24" 
+                              FontWeight="Bold" 
+                              Foreground="#DC3545"
+                              HorizontalAlignment="Center"/>
+                    <TextBlock Text="Tổng chi tiêu" 
+                              FontSize="12" 
+                              Foreground="#6C757D"
+                              HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <StackPanel Grid.Row="4" 
+                   Orientation="Horizontal" 
+                   HorizontalAlignment="Right" 
+                   Margin="0,20,0,0">
+            <Button x:Name="RefreshButton" 
+                   Content="🔄 Làm mới" 
+                   Style="{StaticResource SecondaryButtonStyle}"
+                   Margin="0,0,10,0"
+                   Click="RefreshButton_Click"/>
+            <Button x:Name="BackButton" 
+                   Content="← Quay lại" 
+                   Style="{StaticResource ModernButtonStyle}"
+                   Click="BackButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window> 

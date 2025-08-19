@@ -1,0 +1,251 @@
+<Window x:Class="WpfApp1.Views.UserWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="clr-namespace:WpfApp1.Converters"
+        Title="Pharmacy Store - User Panel" Height="700" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        Background="White"
+        MinWidth="1000" MinHeight="600">
+
+    <Window.Resources>
+        <conv:NullOrEmptyToDefaultImageConverter x:Key="NullOrEmptyToDefaultImageConverter"/>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#4CAF50" Padding="20,15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="🏥 Pharmacy Store - User Panel" 
+                               FontSize="24" 
+                               FontWeight="Bold" 
+                               Foreground="White"/>
+                    <TextBlock Text="Browse and purchase products" 
+                               FontSize="14" 
+                               Foreground="#E8F5E8"
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <TextBlock Text="Welcome, " FontSize="14" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="{Binding CurrentAccount.Username}" FontSize="14" FontWeight="Bold" Foreground="White"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="20,0,0,0">
+                        <TextBlock Text="Số dư: " FontWeight="Bold"/>
+                        <TextBlock Text="{Binding CurrentAccount.Balance, StringFormat={}{0:N2}}" Foreground="Green"/>
+                    </StackPanel>
+                    <Button Content="Nạp tiền"
+                            Margin="20,0,0,0"
+                            Padding="15,5"
+                            Background="Transparent"
+                            BorderBrush="White"
+                            BorderThickness="1"
+                            Foreground="White"
+                            Click="DepositButton_Click"/>
+                    <Button Content="Lịch sử đơn hàng"
+                            Margin="20,0,0,0"
+                            Padding="15,5"
+                            Background="Transparent"
+                            BorderBrush="White"
+                            BorderThickness="1"
+                            Foreground="White"
+                            Click="OrderHistoryButton_Click"/>
+                    <Button Content="Logout" 
+                            Margin="20,0,0,0"
+                            Padding="15,5"
+                            Background="Transparent"
+                            BorderBrush="White"
+                            BorderThickness="1"
+                            Foreground="White"
+                            Click="LogoutButton_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1" Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Products List -->
+            <Border Grid.Column="0" 
+                    BorderBrush="#E0E0E0" 
+                    BorderThickness="1" 
+                    Margin="0,0,10,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Products Header -->
+                    <Border Grid.Row="0" 
+                            Background="#F5F5F5" 
+                            Padding="15,10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Available Products" 
+                                           FontSize="18" 
+                                           FontWeight="Bold"/>
+                                <!-- Thanh tìm kiếm -->
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                    <TextBox x:Name="SearchTextBox" Width="200" Height="28" Margin="0,0,8,0" VerticalAlignment="Center" ToolTip="Tìm kiếm sản phẩm"/>
+                                    <Button Content="Tìm kiếm" Width="80" Height="37" Click="SearchButton_Click"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Products Card List -->
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding CurrentPageProducts}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="3"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="10" Padding="10" Background="White" CornerRadius="10" BorderBrush="#4CAF50" BorderThickness="1" Width="220">
+                                        <Border.Effect>
+                                            <DropShadowEffect ShadowDepth="4" BlurRadius="8" Opacity="0.3"/>
+                                        </Border.Effect>
+                                        <StackPanel>
+                                            <Image Source="{Binding ImageUrl, Converter={StaticResource NullOrEmptyToDefaultImageConverter}}" Width="180" Height="140" Stretch="UniformToFill" Margin="0,0,0,10"/>
+                                            <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" TextAlignment="Center"/>
+                                            <TextBlock Text="{Binding Category}" Foreground="#888" FontSize="12" TextAlignment="Center"/>
+                                            <TextBlock Text="{Binding Manufacturer}" Foreground="#4CAF50" FontSize="12" TextAlignment="Center"/>
+                                            <TextBlock Text="{Binding Price, StringFormat=Giá: {0:N2} đ}" Foreground="#E65100" FontWeight="Bold" FontSize="14" TextAlignment="Center" Margin="0,5,0,0"/>
+                                            <TextBlock Text="{Binding StockQuantity, StringFormat=Tồn kho: {0}}" FontSize="12" TextAlignment="Center"/>
+                                            <Button Content="Thêm vào giỏ" Margin="0,10,0,0" Padding="8,4" Background="#4CAF50" Foreground="White" Tag="{Binding}" Click="AddToCartCard_Click"/>
+                                            <Button Content="Xem chi tiết" Margin="0,5,0,0" Padding="8,4" Background="#2196F3" Foreground="White" Tag="{Binding}" Click="ViewDetails_Click"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <!-- Paging Controls -->
+                    <Border Grid.Row="2" 
+                            Background="#F9F9F9" 
+                            Padding="15,10">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button Content="Previous" 
+                                    Width="80" 
+                                    Height="36" 
+                                    Click="PreviousPage_Click"
+                                    IsEnabled="{Binding CanGoToPreviousPage}"/>
+                            <TextBlock Text="{Binding PageInfo}" 
+                                       VerticalAlignment="Center" 
+                                       Margin="20,0" 
+                                       FontWeight="Bold"/>
+                            <Button Content="Next" 
+                                    Width="80" 
+                                    Height="37" 
+                                    Click="NextPage_Click"
+                                    IsEnabled="{Binding CanGoToNextPage}"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Cart -->
+            <Border Grid.Column="2" 
+                    BorderBrush="#E0E0E0" 
+                    BorderThickness="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Cart Header -->
+                    <Border Grid.Row="0" 
+                            Background="#FF9800" 
+                            Padding="15,10">
+                        <TextBlock Text="🛒 Shopping Cart" 
+                                   FontSize="18" 
+                                   FontWeight="Bold" 
+                                   Foreground="White"/>
+                    </Border>
+
+                    <!-- Cart Items -->
+                    <DataGrid Grid.Row="1" 
+                              x:Name="CartDataGrid"
+                              ItemsSource="{Binding CartItems}"
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              IsReadOnly="True"
+                              GridLinesVisibility="Horizontal"
+                              HeadersVisibility="Column">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Product" Binding="{Binding Product.Name}" Width="*"/>
+                            <DataGridTextColumn Header="Qty" Binding="{Binding Quantity}" Width="50"/>
+                            <DataGridTextColumn Header="Price" Binding="{Binding Product.Price, StringFormat=C}" Width="70"/>
+                            <DataGridTextColumn Header="Total" Binding="{Binding TotalPrice, StringFormat=C}" Width="70"/>
+                            <DataGridTemplateColumn Header="Action" Width="60">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Remove" 
+                                                Margin="2" 
+                                                Padding="4,2"
+                                                Click="RemoveFromCart_Click"
+                                                Tag="{Binding}"
+                                                Background="Red"
+                                                Foreground="White"
+                                                FontSize="10"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- Cart Summary -->
+                    <Border Grid.Row="2" 
+                            Background="#F5F5F5" 
+                            Padding="15,10">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Total:" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="1" Text="{Binding CartTotal, StringFormat=C}" FontWeight="Bold" FontSize="16"/>
+                            </Grid>
+                            <Button Content="Checkout" 
+                                    Height="35" 
+                                    Background="#4CAF50"
+                                    Foreground="White"
+                                    FontWeight="Bold"
+                                    Click="Checkout_Click"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window> 

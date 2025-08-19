@@ -1,0 +1,39 @@
+<Window x:Class="WpfApp1.Views.AddProductWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Thêm sản phẩm mới" Height="900" Width="400" WindowStartupLocation="CenterScreen">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock x:Name="TitleTextBlock" Text="Thêm sản phẩm mới" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" VerticalAlignment="Top" >
+            <TextBlock Text="Tên thuốc:"/>
+            <TextBox x:Name="NameTextBox" Margin="0,5,0,10"/>
+            <TextBlock Text="Mô tả:"/>
+            <TextBox x:Name="DescriptionTextBox" Margin="0,5,0,10" Height="60" AcceptsReturn="True"/>
+            <TextBlock Text="Giá:"/>
+            <TextBox x:Name="PriceTextBox" Margin="0,5,0,10"/>
+            <TextBlock Text="Số lượng tồn:"/>
+            <TextBox x:Name="StockTextBox" Margin="0,5,0,10"/>
+            <TextBlock Text="Danh mục:"/>
+            <TextBox x:Name="CategoryTextBox" Margin="0,5,0,10"/>
+            <TextBlock Text="Nhà sản xuất:"/>
+            <TextBox x:Name="ManufacturerTextBox" Margin="0,5,0,10"/>
+            <TextBlock Text="Ảnh sản phẩm:"/>
+            <StackPanel Orientation="Horizontal" Margin="0,5,0,10">
+                <TextBox x:Name="ImagePathTextBox" Width="200" IsReadOnly="True"/>
+                <Button Content="Chọn ảnh" Margin="5,0,0,0" Click="ChooseImageButton_Click"/>
+            </StackPanel>
+            <Image x:Name="PreviewImage" Width="100" Height="100" Margin="0,0,0,10"/>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+            <Button x:Name="SaveButton" Content="Lưu" Width="100" Margin="10,0" Click="SaveButton_Click"/>
+            <Button Content="Hủy" Width="100" Margin="10,0" Click="CancelButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window> 
